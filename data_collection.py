@@ -94,4 +94,8 @@ george_sort = sorted(character_dic['GEORGE'], key=lambda x: -len(x))
 with open('C:/Users/ben/Desktop/seinfeld/george.pickle', 'wb') as p:
     pickle.dump(george_sort, p)
 
+# We'll also dump the main dictionary
+with open('C:/Users/ben/Desktop/seinfeld/seinfeld.pickle', 'wb') as p:
+    pickle.dump(seinfeld_dic, p)
+
 
