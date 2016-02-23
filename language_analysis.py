@@ -1,7 +1,16 @@
 import pickle
-from collections import Counter
+from collections import Counter, defaultdict
+import urllib.request
+import pandas as pd
+import seaborn as sns
 
 seinfeld_dic = pickle.load(open('C:/Users/ben/Desktop/seinfeld/seinfeld.pickle', 'rb'))
+
+character_episode_dic = defaultdict(lambda: defaultdict(list))
+for key in seinfeld_dic:
+    for key_2 in seinfeld_dic[key]:
+        character_episode_dic[key_2][key].extend(seinfeld_dic[key][key_2])
+
 
 character_dic = defaultdict(list)
 for key in character_episode_dic:
@@ -40,7 +49,7 @@ def find_ngrams(input_list, n):
 # We'll also use a short list of stopwords
 
 stop_words = ['i', 'a', 'about', 'an', 'are', 'as', 'at', 'be'
-              , 'by'  , 'com', 'for', 'from', 'how', 'in', 'is', 'it', 'of'
+              , 'by', 'com', 'for', 'from', 'how', 'in', 'is', 'it', 'of'
               , 'on', 'or', 'that', 'the', 'this', 'to', 'was', 'what', 'when'
               , 'where', 'who', 'will', 'with', 'the']
 
@@ -65,6 +74,34 @@ for character in main_characters:
 
 # It turns out the main characters are pretty similar
 
+# Let's examine 'positivity' and 'negativity' of each character
+# We'll download a list of positive and negative words, and count how often
+# each character uses a positive or negative word
+# (this is fairly naive)
+
+negative_words = (urllib.request.urlopen('http://www.unc.edu/~ncaren/haphazard/negative.txt')
+                  .read().decode('utf-8').split('\n'))
+positive_words = (urllib.request.urlopen('http://www.unc.edu/~ncaren/haphazard/positive.txt')
+                  .read().decode('utf-8').split('\n'))
+
+positive_negative_count_dic = {}
+for character in main_characters:
+    negative_count = sum(1 if word in negative_words else 0 for word in flat_character_dic[character])
+    positive_count = sum(1 if word in positive_words else 0 for word in flat_character_dic[character])
+    positive_negative_count_dic[character] = (round(negative_count / len(flat_character_dic[character]), 3),
+                                              round(positive_count / len(flat_character_dic[character]), 3))
+    print(character, ': ', positive_negative_count_dic[character])
+
+# Convert to a pandas dataframe and plot
+
+positive_negative_df = pd.DataFrame.from_dict(positive_negative_count_dic, orient='index')
+positive_negative_df.rename(columns={0: 'Negative', 1: 'Positive'}, inplace=True)
+positive_negative_df = positive_negative_df.unstack(level=0).reset_index().rename(columns={'level_0': 'Sentiment',
+                                                                                           'level_1': 'Character',
+                                                                                           0: 'percent'})
+ax = sns.barplot(x='Character', y='percent', hue='Sentiment', data=positive_negative_df)
+
+# Newman is unexpectedly positive, the most positive character, according to this basic analysis
 
 
 
