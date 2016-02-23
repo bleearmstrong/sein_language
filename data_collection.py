@@ -97,9 +97,3 @@ with open('C:/Users/ben/Desktop/seinfeld/george.pickle', 'wb') as p:
 # We'll also dump the main dictionary
 with open('C:/Users/ben/Desktop/seinfeld/seinfeld.pickle', 'wb') as p:
     pickle.dump(seinfeld_dic, p)
-
-# Finally we'll dump the reversed dictionary
-with open('C:/Users/ben/Desktop/seinfeld/character_episode_dic.pickle', 'wb') as p:
-    pickle.dump(character_episode_dic, p)
-
-
