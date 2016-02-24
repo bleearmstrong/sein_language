@@ -70,7 +70,7 @@ for link in links:
     print(link)
     # find the title of the episode
     title_line = [i for i, _ in enumerate(text) if re.search('Episodes? ?-? ?\d+&?\d* - (.+)', _)]
-    title = re.search('Episodes? ?-? ?\d+&?\d* - (.+)', text[title_line[0]]).group(1)
+    title = re.search('Episodes? ?-? ?(\d+&?\d* - .+)', text[title_line[0]]).group(1)
     seinfeld_dic[title] = process_lines(text)
 
 # Rearrange the data structures for different uses:
