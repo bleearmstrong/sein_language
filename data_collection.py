@@ -71,7 +71,9 @@ for link in links:
     # find the title of the episode
     title_line = [i for i, _ in enumerate(text) if re.search('Episodes? ?-? ?\d+&?\d* - (.+)', _)]
     title = re.search('Episodes? ?-? ?(\d+&?\d* - .+)', text[title_line[0]]).group(1)
-    seinfeld_dic[title] = process_lines(text)
+    season_line = [i for i, _ in enumerate(text) if re.search('season (\d+)', _)]
+    season = re.search('season (\d+)', text[season_line[0]]).group(1)
+    seinfeld_dic[season + ' - ' + title] = process_lines(text)
 
 # Rearrange the data structures for different uses:
 # in this first, we'll reverse the keys, making the characters the primary key,
