@@ -26,7 +26,8 @@ def process_lines(text):
     """
     d = defaultdict(list)
     # find indices to subset html to relevant lines
-    start_end = [i for i, line in enumerate(text) if '=====' in line or 'the end' in line.lower()]
+    start_end = [i for i, line in enumerate(text)
+                 if '=====' in line or 'the end' in line.lower() or 'END OF SHOW' in line]
     text = text[start_end[0] + 1: start_end[-1]]
     # do some processing (strip characters, remove non-spoken lines (lines appearing within brackets or parentheses)
     # and blank lines. additionally, there are some unicode formatting issues that we'll try to resolve.
